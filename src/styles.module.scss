@@ -40,6 +40,7 @@
 }
 
 .board {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -47,6 +48,22 @@
   min-width: 400px;
   max-width: 50vw;
   flex-basis: 50%;
+}
+
+.overlay {
+  position: absolute;
+  font-size: 30px;
+  color: white;
+  text-shadow: blue 1px 0 3px;
+  cursor: pointer;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px) brightness(60%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .square {

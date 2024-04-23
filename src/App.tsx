@@ -13,7 +13,7 @@ function App() {
   const reset = React.useCallback(() => {
     setBoard(Array(9).fill(""));
     setTurn(getRandomTurn());
-    timer.current = new Date().getTime()
+    timer.current = new Date().getTime();
   }, []);
 
   React.useEffect(() => {
@@ -29,11 +29,7 @@ function App() {
   >([]);
   const result = winner || (isDraw && "Draw");
 
-
   const handleClick = (square: number) => {
-    if (result) {
-      reset();
-    }
     if (board[square]) {
       return false;
     }
@@ -49,7 +45,11 @@ function App() {
   React.useEffect(() => {
     if (result) {
       setScore((val) => {
-        const entry = { id: (val?.[0]?.id || 0) + 1, winner: result, time: (new Date().getTime() - timer.current) / 1000 };
+        const entry = {
+          id: (val?.[0]?.id || 0) + 1,
+          winner: result,
+          time: (new Date().getTime() - timer.current) / 1000,
+        };
 
         return [entry].concat(val);
       });
@@ -60,11 +60,22 @@ function App() {
     <div className={styles.container}>
       <div className={styles.containerInner}>
         <div className={styles.stats}>
-          <div data-testid="turn">Turn: <b>{turn}</b></div>
-          {result && <div data-testid="winner">Winner: <b>{result}</b></div>}
+          <div data-testid="turn">
+            Turn: <b>{turn}</b>
+          </div>
         </div>
 
         <div className={styles.board} data-testid="board">
+          {result && (
+            <div className={styles.overlay} onClick={reset} data-testid="reset">
+              <div>
+                <div data-testid="winner">
+                  Winner: <b>{result}</b>
+                </div>
+                <div>Click to play again</div>
+              </div>
+            </div>
+          )}
           {board.map((value, ind) => (
             <Square
               key={ind}
@@ -103,7 +114,7 @@ function App() {
                 {val.winner.toUpperCase()}
               </div>
               <div key={`time-${val.id}`} className="col">
-                {val.time.toFixed(2) + 's'}
+                {val.time.toFixed(2) + "s"}
               </div>
             </>
           ))}

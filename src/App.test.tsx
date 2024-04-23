@@ -63,7 +63,7 @@ describe("Main app", () => {
   test("should win", async () => {
     const { getByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
-    const turn2 = turn === 'x' ? 'o' : 'x'
+    const turn2 = turn === "x" ? "o" : "x";
 
     act(() => {
       for (let i = 0; i <= 6; i++) userEvent.click(getByTestId(i));
@@ -77,13 +77,12 @@ describe("Main app", () => {
     await waitFor(() => expect(getByTestId(5).textContent).toEqual(turn2));
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
 
-
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
     expect(getWinner(getByTestId)).toEqual(turn);
   });
 
   test("nobody wins(draw)", async () => {
-    const { getByTestId } = render(<App />);
+    const { getByTestId, queryByTestId } = render(<App />);
 
     act(() => {
       userEvent.click(getByTestId(0));
@@ -99,7 +98,8 @@ describe("Main app", () => {
 
     await waitFor(() => expect(getByTestId(6).textContent).toBeTruthy());
 
-    expect(getWinner(getByTestId)).toEqual('Draw');
+    expect(queryByTestId("reset")).toBeTruthy();
+    expect(getWinner(getByTestId)).toEqual("Draw");
   });
 
   test("should reset game", async () => {
@@ -111,14 +111,16 @@ describe("Main app", () => {
     });
 
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
+    expect(queryByTestId("reset")).toBeTruthy();
 
     act(() => {
-      userEvent.click(getByTestId(0));
+      userEvent.click(getByTestId("reset"));
     });
 
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(""));
     await waitFor(() => expect(getByTestId(0).textContent).toEqual(""));
-    expect(queryByTestId('winner')).toBeFalsy()
+    expect(queryByTestId("winner")).toBeFalsy();
+    expect(queryByTestId("reset")).toBeFalsy();
 
     // place 1 turn to be sure
     const newTurn = getTurn(getByTestId);
