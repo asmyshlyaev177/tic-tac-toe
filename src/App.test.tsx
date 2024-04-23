@@ -65,10 +65,20 @@ describe("Main app", () => {
   test("should win", async () => {
     const { getByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
+    const turn2 = turn === 'x' ? 'o' : 'x'
 
     act(() => {
       for (let i = 0; i <= 6; i++) userEvent.click(getByTestId(i));
     });
+
+    await waitFor(() => expect(getByTestId(0).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId(1).textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId(2).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId(3).textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId(4).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId(5).textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
+
 
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
     expect(getWinner(getByTestId)).toEqual(turn);

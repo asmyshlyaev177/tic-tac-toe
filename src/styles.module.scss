@@ -1,3 +1,32 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stats {
+  display: flex;
+  flex-basis: 100%;
+  gap: 12px;
+}
+
+.wins {
+  display: flex;
+  flex-basis: 40%;
+  gap: 12px;
+  height: min-content;
+}
+
+.log {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  width: 100%;
+  border: 1px solid black;
+
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;
@@ -5,6 +34,7 @@
   align-items: center;
   min-width: 400px;
   max-width: 50vw;
+  flex-basis: 50%;
   //   border: 2px solid black;
   gap: 0;
   width: 399px;

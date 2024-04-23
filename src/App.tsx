@@ -13,17 +13,18 @@ function App() {
 
   const winner = board?.[winningPattern?.[0]];
   const isDraw = !winner && board.every((el) => !!el);
-  const [score, setScore] = React.useState({ x: 0, o: 0, draw: 0 });
+  const [score, setScore] = React.useState<{ id: number, winner: string; time: number }[]>(
+    []
+  );
+  const result = winner || (isDraw && "Draw");
 
   const reset = React.useCallback(() => {
     setBoard(Array(9).fill(""));
     setTurn(getRandomTurn());
   }, []);
 
-  const shouldReset = winner || isDraw;
-
   const handleClick = (square: number) => {
-    if (shouldReset) {
+    if (result) {
       reset();
     }
     if (board[square]) {
@@ -39,36 +40,63 @@ function App() {
   };
 
   React.useEffect(() => {
-    setScore((val) => {
-      const newValue = { ...val };
+    if (result) {
+      setScore((val) => {
+        const entry = {id: (val?.[0]?.id || 0) + 1, winner: result, time: 0 };
 
-      if (isDraw) {
-        newValue.draw++;
-      } else if (winner) {
-        newValue[winner]++;
-      }
-      return newValue;
-    });
-  }, [isDraw, winner]);
+        return [entry].concat(val);
+      });
+    }
+  }, [result]);
+
 
   return (
-    <div>
-      <div data-testid="turn">Turn: {turn}</div>
-      <div data-testid="winner">Winner: {winner}</div>
-      <div data-testid="draw">Draw: {JSON.stringify(isDraw)}</div>
-
-      <div data-testid="score">Score: {JSON.stringify(score)}</div>
+    <div className={styles.container}>
+      <div className={styles.stats}>
+        <div data-testid="turn">Turn: {turn}</div>
+        <div data-testid="winner">Winner: {winner}</div>
+        <div data-testid="draw">Draw: {JSON.stringify(isDraw)}</div>
+      </div>
 
       <div className={styles.board} data-testid="board">
         {board.map((value, ind) => (
           <Square
             key={ind}
             value={value}
-            onClick={() => handleClick(ind)}
+            onMouseUp={() => handleClick(ind)}
             active={winningPattern?.includes?.(ind)}
             ind={ind}
           />
         ))}
+      </div>
+
+      <div>
+        <div className={styles.wins}>
+          <div>
+            X wins:&nbsp;
+            <b>{score.reduce((acc, val) => acc + +(val.winner === "x"), 0)}</b>
+          </div>
+          <div>
+            O wins:&nbsp;
+            <b>{score.reduce((acc, val) => acc + +(val.winner === "o"), 0)}</b>
+          </div>
+        </div>
+
+        <section className={styles.log} data-testid="log">
+          <div className="col" key="winner">winner</div>
+          <div className="col" key="time">time</div>
+
+          {score.map((val) => (
+            <>
+              <div key={`winner-${val.id}`} className="col">
+                {val.winner.toUpperCase()}
+              </div>
+              <div key={`time-${val.id}`} className="col">
+                {val.time}
+              </div>
+            </>
+          ))}
+        </section>
       </div>
     </div>
   );
@@ -76,19 +104,19 @@ function App() {
 
 const Square = ({
   value,
-  onClick,
+  onMouseUp,
   ind,
   active,
 }: {
   value: SquareType;
-  onClick: () => void;
+  onMouseUp: () => void;
   ind: number;
   active: boolean;
 }) => {
   return (
     <div
       className={`square ${styles.square} ${active ? styles.highlighted : ""}`}
-      onClick={onClick}
+      onMouseUp={onMouseUp}
       data-testid={ind}
       data-highlighted={active}
     >
