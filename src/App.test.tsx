@@ -7,9 +7,7 @@ import App from "./App";
 const getTurn = (getByTestId: ReturnType<typeof render>["getByTestId"]) =>
   getByTestId("turn").textContent?.match(/: ([o|x])/)?.[1];
 const getWinner = (getByTestId: ReturnType<typeof render>["getByTestId"]) =>
-  getByTestId("winner").textContent?.match(/: ([o|x])/)?.[1];
-const getDraw = (getByTestId: ReturnType<typeof render>["getByTestId"]) =>
-  getByTestId("draw").textContent?.match(/: (false|true)/)?.[1];
+  getByTestId("winner").textContent?.match(/: (.*)/)?.[1];
 
 describe("Main app", () => {
   test("should render without errors", () => {
@@ -101,12 +99,11 @@ describe("Main app", () => {
 
     await waitFor(() => expect(getByTestId(6).textContent).toBeTruthy());
 
-    expect(getWinner(getByTestId)).toEqual(undefined);
-    expect(getDraw(getByTestId)).toEqual("true");
+    expect(getWinner(getByTestId)).toEqual('Draw');
   });
 
   test("should reset game", async () => {
-    const { getByTestId } = render(<App />);
+    const { getByTestId, queryByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
 
     act(() => {
@@ -121,7 +118,7 @@ describe("Main app", () => {
 
     await waitFor(() => expect(getByTestId(6).textContent).toEqual(""));
     await waitFor(() => expect(getByTestId(0).textContent).toEqual(""));
-    expect(getWinner(getByTestId)).toEqual(undefined);
+    expect(queryByTestId('winner')).toBeFalsy()
 
     // place 1 turn to be sure
     const newTurn = getTurn(getByTestId);

@@ -1,7 +1,18 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  padding: 28px;
+
+  & > * {
+    margin: 20px;
+  }
+}
+
+.containerInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: min-content;
 }
 
 .stats {
@@ -21,6 +32,7 @@
   display: grid;
   grid-template-columns: repeat(2, auto);
   width: 100%;
+  min-width: 200px;
   border: 1px solid black;
 
   max-height: 300px;
@@ -35,9 +47,6 @@
   min-width: 400px;
   max-width: 50vw;
   flex-basis: 50%;
-  //   border: 2px solid black;
-  gap: 0;
-  width: 399px;
 }
 
 .square {
@@ -48,10 +57,10 @@
   align-items: center;
   cursor: pointer;
   user-select: none;
+
   font-size: 60px;
 
   transition: all 0.3s;
-  //   background-color: white;
   border: 1px solid black;
 }
 

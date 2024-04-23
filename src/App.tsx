@@ -8,20 +8,27 @@ import type { SquareType, Turn } from "./types";
 function App() {
   const [board, setBoard] = React.useState<SquareType[]>(Array(9).fill(""));
   const [turn, setTurn] = React.useState<Turn>(() => getRandomTurn());
+  const timer = React.useRef(new Date().getTime());
+
+  const reset = React.useCallback(() => {
+    setBoard(Array(9).fill(""));
+    setTurn(getRandomTurn());
+    timer.current = new Date().getTime()
+  }, []);
+
+  React.useEffect(() => {
+    reset();
+  }, [reset]);
 
   const winningPattern = getWinPattern(board);
 
   const winner = board?.[winningPattern?.[0]];
   const isDraw = !winner && board.every((el) => !!el);
-  const [score, setScore] = React.useState<{ id: number, winner: string; time: number }[]>(
-    []
-  );
+  const [score, setScore] = React.useState<
+    { id: number; winner: string; time: number }[]
+  >([]);
   const result = winner || (isDraw && "Draw");
 
-  const reset = React.useCallback(() => {
-    setBoard(Array(9).fill(""));
-    setTurn(getRandomTurn());
-  }, []);
 
   const handleClick = (square: number) => {
     if (result) {
@@ -42,32 +49,32 @@ function App() {
   React.useEffect(() => {
     if (result) {
       setScore((val) => {
-        const entry = {id: (val?.[0]?.id || 0) + 1, winner: result, time: 0 };
+        const entry = { id: (val?.[0]?.id || 0) + 1, winner: result, time: (new Date().getTime() - timer.current) / 1000 };
 
         return [entry].concat(val);
       });
     }
   }, [result]);
 
-
   return (
     <div className={styles.container}>
-      <div className={styles.stats}>
-        <div data-testid="turn">Turn: {turn}</div>
-        <div data-testid="winner">Winner: {winner}</div>
-        <div data-testid="draw">Draw: {JSON.stringify(isDraw)}</div>
-      </div>
+      <div className={styles.containerInner}>
+        <div className={styles.stats}>
+          <div data-testid="turn">Turn: <b>{turn}</b></div>
+          {result && <div data-testid="winner">Winner: <b>{result}</b></div>}
+        </div>
 
-      <div className={styles.board} data-testid="board">
-        {board.map((value, ind) => (
-          <Square
-            key={ind}
-            value={value}
-            onMouseUp={() => handleClick(ind)}
-            active={winningPattern?.includes?.(ind)}
-            ind={ind}
-          />
-        ))}
+        <div className={styles.board} data-testid="board">
+          {board.map((value, ind) => (
+            <Square
+              key={ind}
+              value={value}
+              onMouseUp={() => handleClick(ind)}
+              active={winningPattern?.includes?.(ind)}
+              ind={ind}
+            />
+          ))}
+        </div>
       </div>
 
       <div>
@@ -83,8 +90,12 @@ function App() {
         </div>
 
         <section className={styles.log} data-testid="log">
-          <div className="col" key="winner">winner</div>
-          <div className="col" key="time">time</div>
+          <div className="col" key="winner">
+            <b>winner</b>
+          </div>
+          <div className="col" key="time">
+            <b>time</b>
+          </div>
 
           {score.map((val) => (
             <>
@@ -92,7 +103,7 @@ function App() {
                 {val.winner.toUpperCase()}
               </div>
               <div key={`time-${val.id}`} className="col">
-                {val.time}
+                {val.time.toFixed(2) + 's'}
               </div>
             </>
           ))}
