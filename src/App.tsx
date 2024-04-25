@@ -5,24 +5,22 @@ import { isWinPattern } from "./helpers";
 
 import type { SquareType, Turn } from "./types";
 
+const BOARD_SIZE = 3;
+const getBoard = (size: number) => Array(size).fill(Array(size).fill(""));
+
 function App() {
-  const [board, setBoard] = React.useState<SquareType[][]>([
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ]);
+  const [boardSize, setBoardSize] = React.useState(BOARD_SIZE);
+  const [board, setBoard] = React.useState<SquareType[][]>(() =>
+    getBoard(boardSize)
+  );
   const [turn, setTurn] = React.useState<Turn>(() => getRandomTurn());
   const timer = React.useRef(new Date().getTime());
 
   const reset = React.useCallback(() => {
-    setBoard([
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ]);
+    setBoard(getBoard(boardSize));
     setTurn(getRandomTurn());
     timer.current = new Date().getTime();
-  }, []);
+  }, [boardSize]);
 
   React.useEffect(() => {
     reset();
@@ -33,7 +31,8 @@ function App() {
   const winner =
     winningPattern &&
     board?.[winningPattern?.[0]?.[0]]?.[winningPattern?.[0]?.[1]];
-  const isDraw = !winner && board.every((row) => row.every((col) => col));
+  const isDraw =
+    board?.[0]?.length === boardSize && !winner && board.every((row) => row.every((col) => col));
   const [score, setScore] = React.useState<
     { id: number; winner: string; time: number }[]
   >([]);
@@ -45,7 +44,7 @@ function App() {
     }
 
     setBoard((b) => {
-      const newBoard = [...b];
+      const newBoard = JSON.parse(JSON.stringify(b));
       newBoard[row][col] = turn;
       return newBoard;
     });
@@ -92,6 +91,7 @@ function App() {
                 key={`${rowInd}${colInd}`}
                 value={col}
                 onMouseUp={() => handleClick(rowInd, colInd)}
+                basis={`${100 / +boardSize}%`}
                 active={winningPattern?.some?.(
                   ([r, c]) => r === rowInd && c === colInd
                 )}
@@ -112,6 +112,19 @@ function App() {
             O wins:&nbsp;
             <b>{score.reduce((acc, val) => acc + +(val.winner === "o"), 0)}</b>
           </div>
+        </div>
+        <div>
+          <label htmlFor="board-size">Board size</label>
+          <input
+            id="board-size"
+            value={boardSize}
+            onChange={(ev) => {
+              const val = +ev.target.value;
+              if (!Number.isNaN(val) && val < 7) {
+                setBoardSize(val);
+              }
+            }}
+          ></input>
         </div>
 
         <section className={styles.log} data-testid="log">
@@ -143,14 +156,17 @@ const Square = ({
   onMouseUp,
   ind,
   active,
+  basis,
 }: {
   value: SquareType;
   onMouseUp: () => void;
   ind: string;
   active: boolean;
+  basis: string;
 }) => {
   return (
     <div
+      style={{ flexBasis: basis }}
       className={`square ${styles.square} ${active ? styles.highlighted : ""}`}
       onMouseUp={onMouseUp}
       data-testid={ind}
