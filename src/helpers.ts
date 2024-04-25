@@ -43,9 +43,10 @@ export const isWinPattern = (board: string[][]) => {
     diagMatch2 =
       diag2.length === currentRow.length &&
       diag2.every((el) => el && el === diag2[0]);
+      if (diagMatch1 || diagMatch2) { return true }
   }
 
-  return diagMatch1 || diagMatch2;
+  return false
 };
 
 const winPatterns: WinPattern[] = [
