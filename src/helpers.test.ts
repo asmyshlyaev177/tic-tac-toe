@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 
-import { getWinPattern } from "./helpers";
+import { getWinPattern, isWinPattern } from "./helpers";
 import { SquareType } from "./types";
 
 // easier to read this way
@@ -100,5 +100,38 @@ describe("getWinPattern", () => {
          d e f`)
       )
     ).toStrictEqual(undefined);
+  });
+});
+
+describe("", () => {
+  test.only("hor match", () => {
+    // expect(
+    //   isWinPattern([
+    //     ["x", "x", "x"],
+    //     ["", "", ""],
+    //     ["", "", ""],
+    //   ])
+    // ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "", ""],
+        ["x", "x", "x"],
+        ["", "", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "", ""],
+        ["", "", ""],
+        ["x", "x", "x"],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "", ""],
+        ["", "", ""],
+        ["x", "x", ""],
+      ])
+    ).toEqual(false);
   });
 });

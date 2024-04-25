@@ -1,5 +1,43 @@
 import type { SquareType, WinPattern } from "./types";
 
+// [[0 0 0], [0 0 0], [0 0 0]]
+// row
+// const board = [
+//   [0, 0, 0],
+//   [0, 0, 0],
+//   [0, 0, 0],
+// ];
+
+
+// not finished
+export const isWinPattern = (board: string[][]) => {
+  let horMatch , vertMatch, diagMatch
+
+  for (let row = 0; row < board.length; row++) {
+    horMatch =
+      board[row] && board[row].every((el) => !!el && el === board[row][0]);
+
+    const vert: string[] = [];
+    const diag: string[] = []
+    for (let col = 0; col < board[row].length; col++) {
+      const square = board[row][col];
+      vert.push(square);
+
+      if (row === col) {
+        diag.push(square)
+      }
+    }
+    vertMatch = vert.every((el) => el && el === vert[0]);
+    diagMatch = diag.every((el) => el && el === diag[0]);
+
+
+  }
+
+  console.log({horMatch, vertMatch, diagMatch })
+
+  return horMatch || vertMatch || diagMatch;
+};
+
 const winPatterns: WinPattern[] = [
   [0, 1, 2],
   [3, 4, 5],
