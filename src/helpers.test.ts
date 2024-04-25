@@ -137,9 +137,27 @@ describe("", () => {
     ).toEqual(true);
     expect(
       isWinPattern([
+        ["x", "x"],
+        ["", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", ""],
+        ["x", "x"],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
         ["", "", ""],
         ["", "", ""],
         ["x", "x", ""],
+      ])
+    ).toEqual(false);
+    expect(
+      isWinPattern([
+        ["", ""],
+        ["x", ""],
       ])
     ).toEqual(false);
   });
@@ -177,6 +195,18 @@ describe("", () => {
     ).toEqual(true);
     expect(
       isWinPattern([
+        ["x", ""],
+        ["x", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "x"],
+        ["", "x"],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
         ["", "", "x"],
         ["", "", "x"],
         ["x", "x", ""],
@@ -205,6 +235,18 @@ describe("", () => {
         ["", "", "x", ""],
         ["", "x", "", ""],
         ["x", "", "", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "x"],
+        ["x", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["x", ""],
+        ["", "x"],
       ])
     ).toEqual(true);
     expect(

@@ -20,8 +20,7 @@ export const isWinPattern = (board: string[][]) => {
     const vert: string[] = [];
 
     for (let col = 0; col < currentRow.length; col++) {
-      const square = board[col][row];
-      vert.push(square);
+      vert.push(board[col][row]);
       const vertMatch =
         vert.length === currentRow.length &&
         vert.every((el) => el && el === vert[0]);
@@ -30,10 +29,10 @@ export const isWinPattern = (board: string[][]) => {
       }
 
       if (row === col) {
-        diag1.push(square);
+        diag1.push(board[row][col]);
       }
       if (row === currentRow.length - 1 - col) {
-        diag2.push(square);
+        diag2.push(board[row][col]);
       }
     }
 
