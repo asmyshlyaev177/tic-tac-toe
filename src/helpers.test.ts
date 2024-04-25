@@ -104,14 +104,14 @@ describe("getWinPattern", () => {
 });
 
 describe("", () => {
-  test.only("hor match", () => {
-    // expect(
-    //   isWinPattern([
-    //     ["x", "x", "x"],
-    //     ["", "", ""],
-    //     ["", "", ""],
-    //   ])
-    // ).toEqual(true);
+  test("hor match", () => {
+    expect(
+      isWinPattern([
+        ["x", "x", "x"],
+        ["", "", ""],
+        ["", "", ""],
+      ])
+    ).toEqual(true);
     expect(
       isWinPattern([
         ["", "", ""],
@@ -119,6 +119,7 @@ describe("", () => {
         ["", "", ""],
       ])
     ).toEqual(true);
+
     expect(
       isWinPattern([
         ["", "", ""],
@@ -133,5 +134,61 @@ describe("", () => {
         ["x", "x", ""],
       ])
     ).toEqual(false);
+  });
+
+  test("vert match", () => {
+    expect(
+      isWinPattern([
+        ["x", "", ""],
+        ["x", "", ""],
+        ["x", "", ""],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "x", ""],
+        ["", "x", ""],
+        ["", "x", ""],
+      ])
+    ).toEqual(true);
+
+    expect(
+      isWinPattern([
+        ["", "", "x"],
+        ["", "", "x"],
+        ["", "", "x"],
+      ])
+    ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "", "x"],
+        ["", "", "x"],
+        ["x", "x", ""],
+      ])
+    ).toEqual(false);
+  });
+
+  test.only("diag match", () => {
+    // expect(
+    //   isWinPattern([
+    //     ["x", "", ""],
+    //     ["", "x", ""],
+    //     ["", "", "x"],
+    //   ])
+    // ).toEqual(true);
+    expect(
+      isWinPattern([
+        ["", "", "x"],
+        ["", "x", ""],
+        ["x", "", ""],
+      ])
+    ).toEqual(true);
+    // expect(
+    //   isWinPattern([
+    //     ["", "", ""],
+    //     ["", "x", "x"],
+    //     ["x", "x", ""],
+    //   ])
+    // ).toEqual(false);
   });
 });

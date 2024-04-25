@@ -8,32 +8,32 @@ import type { SquareType, WinPattern } from "./types";
 //   [0, 0, 0],
 // ];
 
-
 // not finished
 export const isWinPattern = (board: string[][]) => {
-  let horMatch , vertMatch, diagMatch
+  let horMatch, vertMatch, diagMatch;
+  const diag: string[] = [];
 
   for (let row = 0; row < board.length; row++) {
-    horMatch =
-      board[row] && board[row].every((el) => !!el && el === board[row][0]);
+    horMatch = horMatch || board[row].every((el) => el && el === board[row][0]);
 
     const vert: string[] = [];
-    const diag: string[] = []
+
     for (let col = 0; col < board[row].length; col++) {
-      const square = board[row][col];
+      const square = board[col][row];
       vert.push(square);
 
+      console.log({ row, col, square });
       if (row === col) {
-        diag.push(square)
+        diag.push(square);
       }
     }
-    vertMatch = vert.every((el) => el && el === vert[0]);
-    diagMatch = diag.every((el) => el && el === diag[0]);
-
-
+    vertMatch = vertMatch || vert.every((el) => el && el === vert[0]);
+    console.log({ diagMatch, diag });
+    diagMatch =
+      diagMatch ||
+      (diag.length === board[row].length &&
+        diag.every((el) => el && el === diag[0]));
   }
-
-  console.log({horMatch, vertMatch, diagMatch })
 
   return horMatch || vertMatch || diagMatch;
 };
