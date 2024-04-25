@@ -22,17 +22,19 @@ export const isWinPattern = (board: string[][]) => {
     for (let col = 0; col < currentRow.length; col++) {
       const square = board[col][row];
       vert.push(square);
+      const vertMatch =
+        vert.length === currentRow.length &&
+        vert.every((el) => el && el === vert[0]);
+      if (vertMatch) {
+        return true;
+      }
 
       if (row === col) {
         diag1.push(square);
       }
       if (row === currentRow.length - 1 - col) {
-        diag2.push(square)
+        diag2.push(square);
       }
-    }
-    const vertMatch = vert.every((el) => el && el === vert[0]);
-    if (vertMatch) {
-      return true;
     }
 
     diagMatch1 =
