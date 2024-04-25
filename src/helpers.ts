@@ -1,41 +1,49 @@
 import type { SquareType, WinPattern } from "./types";
 
-// [[0 0 0], [0 0 0], [0 0 0]]
-// row
 // const board = [
 //   [0, 0, 0],
 //   [0, 0, 0],
 //   [0, 0, 0],
 // ];
 
-// not finished
 export const isWinPattern = (board: string[][]) => {
-  let horMatch, vertMatch, diagMatch;
-  const diag: string[] = [];
+  const diag1: string[] = [];
+  const diag2: string[] = [];
+  let [diagMatch1, diagMatch2] = [false, false];
 
   for (let row = 0; row < board.length; row++) {
-    horMatch = horMatch || board[row].every((el) => el && el === board[row][0]);
-
+    const currentRow = board[row];
+    const horMatch = currentRow.every((el) => el && el === currentRow[0]);
+    if (horMatch) {
+      return true;
+    }
     const vert: string[] = [];
 
-    for (let col = 0; col < board[row].length; col++) {
+    for (let col = 0; col < currentRow.length; col++) {
       const square = board[col][row];
       vert.push(square);
 
-      console.log({ row, col, square });
       if (row === col) {
-        diag.push(square);
+        diag1.push(square);
+      }
+      if (row === currentRow.length - 1 - col) {
+        diag2.push(square)
       }
     }
-    vertMatch = vertMatch || vert.every((el) => el && el === vert[0]);
-    console.log({ diagMatch, diag });
-    diagMatch =
-      diagMatch ||
-      (diag.length === board[row].length &&
-        diag.every((el) => el && el === diag[0]));
+    const vertMatch = vert.every((el) => el && el === vert[0]);
+    if (vertMatch) {
+      return true;
+    }
+
+    diagMatch1 =
+      diag1.length === currentRow.length &&
+      diag1.every((el) => el && el === diag1[0]);
+    diagMatch2 =
+      diag2.length === currentRow.length &&
+      diag2.every((el) => el && el === diag2[0]);
   }
 
-  return horMatch || vertMatch || diagMatch;
+  return diagMatch1 || diagMatch2;
 };
 
 const winPatterns: WinPattern[] = [
