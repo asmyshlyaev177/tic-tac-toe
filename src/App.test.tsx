@@ -17,7 +17,7 @@ describe("Main app", () => {
   test("should place mark", async () => {
     const { getByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
-    const square = getByTestId("0");
+    const square = getByTestId("0-0");
 
     act(() => {
       userEvent.click(square);
@@ -29,7 +29,7 @@ describe("Main app", () => {
   test("should change turn", async () => {
     const { getByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
-    const square = getByTestId("0");
+    const square = getByTestId("0-0");
 
     act(() => {
       userEvent.click(square);
@@ -43,7 +43,7 @@ describe("Main app", () => {
   test("should not allow to change marked square", async () => {
     const { getByTestId } = render(<App />);
     const turn = getTurn(getByTestId);
-    const square = getByTestId("0");
+    const square = getByTestId("0-0");
 
     act(() => {
       userEvent.click(square);
@@ -66,18 +66,22 @@ describe("Main app", () => {
     const turn2 = turn === "x" ? "o" : "x";
 
     act(() => {
-      for (let i = 0; i <= 6; i++) userEvent.click(getByTestId(i));
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          userEvent.click(getByTestId(`${i}-${j}`));
+        }
+      }
     });
 
-    await waitFor(() => expect(getByTestId(0).textContent).toEqual(turn));
-    await waitFor(() => expect(getByTestId(1).textContent).toEqual(turn2));
-    await waitFor(() => expect(getByTestId(2).textContent).toEqual(turn));
-    await waitFor(() => expect(getByTestId(3).textContent).toEqual(turn2));
-    await waitFor(() => expect(getByTestId(4).textContent).toEqual(turn));
-    await waitFor(() => expect(getByTestId(5).textContent).toEqual(turn2));
-    await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("0-0").textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("0-1").textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId("0-2").textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("1-0").textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId("1-1").textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("1-2").textContent).toEqual(turn2));
+    await waitFor(() => expect(getByTestId("2-0").textContent).toEqual(turn));
 
-    await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("2-0").textContent).toEqual(turn));
     expect(getWinner(getByTestId)).toEqual(turn);
   });
 
@@ -85,18 +89,18 @@ describe("Main app", () => {
     const { getByTestId, queryByTestId } = render(<App />);
 
     act(() => {
-      userEvent.click(getByTestId(0));
-      userEvent.click(getByTestId(4));
-      userEvent.click(getByTestId(8));
-      userEvent.click(getByTestId(2));
-      userEvent.click(getByTestId(1));
-      userEvent.click(getByTestId(3));
-      userEvent.click(getByTestId(5));
-      userEvent.click(getByTestId(7));
-      userEvent.click(getByTestId(6));
+      userEvent.click(getByTestId("0-0"));
+      userEvent.click(getByTestId("1-1"));
+      userEvent.click(getByTestId("2-2"));
+      userEvent.click(getByTestId("0-2"));
+      userEvent.click(getByTestId("0-1"));
+      userEvent.click(getByTestId("1-0"));
+      userEvent.click(getByTestId("1-2"));
+      userEvent.click(getByTestId("2-1"));
+      userEvent.click(getByTestId("2-0"));
     });
 
-    await waitFor(() => expect(getByTestId(6).textContent).toBeTruthy());
+    await waitFor(() => expect(getByTestId("2-0").textContent).toBeTruthy());
 
     expect(queryByTestId("reset")).toBeTruthy();
     expect(getWinner(getByTestId)).toEqual("Draw");
@@ -107,24 +111,28 @@ describe("Main app", () => {
     const turn = getTurn(getByTestId);
 
     act(() => {
-      for (let i = 0; i <= 6; i++) userEvent.click(getByTestId(i));
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          userEvent.click(getByTestId(`${i}-${j}`));
+        }
+      }
     });
 
-    await waitFor(() => expect(getByTestId(6).textContent).toEqual(turn));
+    await waitFor(() => expect(getByTestId("2-0").textContent).toEqual(turn));
     expect(queryByTestId("reset")).toBeTruthy();
 
     act(() => {
       userEvent.click(getByTestId("reset"));
     });
 
-    await waitFor(() => expect(getByTestId(6).textContent).toEqual(""));
-    await waitFor(() => expect(getByTestId(0).textContent).toEqual(""));
+    await waitFor(() => expect(getByTestId("2-0").textContent).toEqual(""));
+    await waitFor(() => expect(getByTestId("0-0").textContent).toEqual(""));
     expect(queryByTestId("winner")).toBeFalsy();
     expect(queryByTestId("reset")).toBeFalsy();
 
     // place 1 turn to be sure
     const newTurn = getTurn(getByTestId);
-    const square = getByTestId("0");
+    const square = getByTestId("0-0");
     act(() => {
       userEvent.click(square);
     });

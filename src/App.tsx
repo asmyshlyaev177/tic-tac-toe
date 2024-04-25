@@ -1,17 +1,25 @@
 import React from "react";
 
 import styles from "./styles.module.scss";
-import { getWinPattern } from "./helpers";
+import { isWinPattern } from "./helpers";
 
 import type { SquareType, Turn } from "./types";
 
 function App() {
-  const [board, setBoard] = React.useState<SquareType[]>(Array(9).fill(""));
+  const [board, setBoard] = React.useState<SquareType[][]>([
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ]);
   const [turn, setTurn] = React.useState<Turn>(() => getRandomTurn());
   const timer = React.useRef(new Date().getTime());
 
   const reset = React.useCallback(() => {
-    setBoard(Array(9).fill(""));
+    setBoard([
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ]);
     setTurn(getRandomTurn());
     timer.current = new Date().getTime();
   }, []);
@@ -20,23 +28,25 @@ function App() {
     reset();
   }, [reset]);
 
-  const winningPattern = getWinPattern(board);
+  const winningPattern = isWinPattern(board);
 
-  const winner = board?.[winningPattern?.[0]];
-  const isDraw = !winner && board.every((el) => !!el);
+  const winner =
+    winningPattern &&
+    board?.[winningPattern?.[0]?.[0]]?.[winningPattern?.[0]?.[1]];
+  const isDraw = !winner && board.every((row) => row.every((col) => col));
   const [score, setScore] = React.useState<
     { id: number; winner: string; time: number }[]
   >([]);
   const result = winner || (isDraw && "Draw");
 
-  const handleClick = (square: number) => {
-    if (board[square]) {
+  const handleClick = (row: number, col: number) => {
+    if (board[row][col]) {
       return false;
     }
 
     setBoard((b) => {
       const newBoard = [...b];
-      newBoard[square] = turn;
+      newBoard[row][col] = turn;
       return newBoard;
     });
     setTurn((v) => (v === "x" ? "o" : "x"));
@@ -76,15 +86,19 @@ function App() {
               </div>
             </div>
           )}
-          {board.map((value, ind) => (
-            <Square
-              key={ind}
-              value={value}
-              onMouseUp={() => handleClick(ind)}
-              active={winningPattern?.includes?.(ind)}
-              ind={ind}
-            />
-          ))}
+          {board.map((row, rowInd) =>
+            row.map((col, colInd) => (
+              <Square
+                key={`${rowInd}${colInd}`}
+                value={col}
+                onMouseUp={() => handleClick(rowInd, colInd)}
+                active={winningPattern?.some?.(
+                  ([r, c]) => r === rowInd && c === colInd
+                )}
+                ind={`${rowInd}-${colInd}`}
+              />
+            ))
+          )}
         </div>
       </div>
 
@@ -132,7 +146,7 @@ const Square = ({
 }: {
   value: SquareType;
   onMouseUp: () => void;
-  ind: number;
+  ind: string;
   active: boolean;
 }) => {
   return (
