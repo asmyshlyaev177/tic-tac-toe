@@ -2,6 +2,10 @@ import type { SquareType } from "./types";
 
 type PosValue = [[row: number, col: number], SquareType];
 
+export function clone<T>(val: T): T {
+  return  JSON.parse(JSON.stringify(val)) 
+}
+
 export const isWinPattern = (
   board: SquareType[][]
 ): [row: number, col: number][] => {

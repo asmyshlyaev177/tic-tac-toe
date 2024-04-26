@@ -1,12 +1,12 @@
 import React from "react";
 
 import styles from "./styles.module.scss";
-import { isWinPattern } from "./helpers";
+import { isWinPattern, clone } from "./helpers";
 
 import type { SquareType, Turn } from "./types";
 
 const BOARD_SIZE = 3;
-const getBoard = (size: number) => Array(size).fill(Array(size).fill(""));
+const getBoard = (size: number): SquareType[][] => Array(size).fill(Array(size).fill(""));
 
 function App() {
   const [boardSize, setBoardSize] = React.useState(BOARD_SIZE);
@@ -46,7 +46,7 @@ function App() {
     }
 
     setBoard((b) => {
-      const newBoard = JSON.parse(JSON.stringify(b));
+      const newBoard = clone(b);
       newBoard[row][col] = turn;
       return newBoard;
     });
