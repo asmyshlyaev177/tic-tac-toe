@@ -1,8 +1,10 @@
 import type { SquareType } from "./types";
 
+type PosValue = [[row: number, col: number], SquareType];
+
 export const isWinPattern = (board: SquareType[][]) => {
-  const diag1: [[number, number], SquareType][] = [];
-  const diag2: [[number, number], SquareType][] = [];
+  const diagLeftToRight: PosValue[] = [];
+  const diagRightToLeft: PosValue[] = [];
   let [diagMatch1, diagMatch2] = [false, false];
 
   for (let row = 0; row < board.length; row++) {
@@ -11,36 +13,39 @@ export const isWinPattern = (board: SquareType[][]) => {
     if (horMatch) {
       return currentRow.map((_el, col) => [row, col]);
     }
-    const vert: [[number, number], SquareType][] = [];
+    const vert: PosValue[] = [];
 
     for (let col = 0; col < currentRow.length; col++) {
       vert.push([[col, row], board[col][row]]);
       const vertMatch =
         vert.length === currentRow.length &&
-        vert.every((el) => el[1] && el[1] === vert[0][1]);
+        !!vert[0][1] &&
+        vert.every((el) => el[1] === vert[0][1]);
       if (vertMatch) {
         return vert.map((el) => el[0]);
       }
 
       if (row === col) {
-        diag1.push([[row, col], board[row][col]]);
+        diagLeftToRight.push([[row, col], board[row][col]]);
       }
       if (row === currentRow.length - 1 - col) {
-        diag2.push([[row, col], board[row][col]]);
+        diagRightToLeft.push([[row, col], board[row][col]]);
       }
     }
 
     diagMatch1 =
-      diag1.length === currentRow.length &&
-      diag1.every((el) => el[1] && el[1] === diag1[0][1]);
+      diagLeftToRight.length === currentRow.length &&
+      !!diagLeftToRight[0][1] &&
+      diagLeftToRight.every((el) => el[1] === diagLeftToRight[0][1]);
     if (diagMatch1) {
-      return diag1.map((el) => el[0]);
+      return diagLeftToRight.map((el) => el[0]);
     }
     diagMatch2 =
-      diag2.length === currentRow.length &&
-      diag2.every((el) => el[1] && el[1] === diag2[0][1]);
+      diagRightToLeft.length === currentRow.length &&
+      !!diagRightToLeft[0][1] &&
+      diagRightToLeft.every((el) => el[1] === diagRightToLeft[0][1]);
     if (diagMatch2) {
-      return diag2.map((el) => el[0]);
+      return diagRightToLeft.map((el) => el[0]);
     }
   }
 
