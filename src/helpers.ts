@@ -2,7 +2,9 @@ import type { SquareType } from "./types";
 
 type PosValue = [[row: number, col: number], SquareType];
 
-export const isWinPattern = (board: SquareType[][]) => {
+export const isWinPattern = (
+  board: SquareType[][]
+): [row: number, col: number][] => {
   const diagLeftToRight: PosValue[] = [];
   const diagRightToLeft: PosValue[] = [];
   let [diagMatch1, diagMatch2] = [false, false];
