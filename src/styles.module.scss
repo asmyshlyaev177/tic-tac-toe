@@ -69,17 +69,24 @@
 .square {
   aspect-ratio: 1/1;
   flex-basis: 33.3333%;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   user-select: none;
   overflow: hidden;
-
-  font-size: 60px;
+  container-type: inline-size;
 
   transition: all 0.3s;
   border: 1px solid black;
+
+  & > * {
+    width: 100%;
+    font-size: 80cqw;
+    text-align: center;
+    margin-top: -10%;
+  }
 }
 
 .highlighted {

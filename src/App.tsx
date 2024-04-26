@@ -32,7 +32,9 @@ function App() {
     winningPattern &&
     board?.[winningPattern?.[0]?.[0]]?.[winningPattern?.[0]?.[1]];
   const isDraw =
-    board?.[0]?.length === boardSize && !winner && board.every((row) => row.every((col) => col));
+    board?.[0]?.length === boardSize &&
+    !winner &&
+    board.every((row) => row.every((col) => col));
   const [score, setScore] = React.useState<
     { id: number; winner: string; time: number }[]
   >([]);
@@ -120,7 +122,7 @@ function App() {
             value={boardSize}
             onChange={(ev) => {
               const val = +ev.target.value;
-              if (!Number.isNaN(val) && val < 7) {
+              if (!Number.isNaN(val) && val < 15) {
                 setBoardSize(val);
               }
             }}
@@ -172,7 +174,7 @@ const Square = ({
       data-testid={ind}
       data-highlighted={active}
     >
-      {value}
+      <span>{value}</span>
     </div>
   );
 };
