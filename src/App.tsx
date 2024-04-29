@@ -29,8 +29,8 @@ function App() {
   const winningPattern = isWinPattern(board);
 
   const winner =
-    winningPattern &&
-    board?.[winningPattern?.[0]?.[0]]?.[winningPattern?.[0]?.[1]];
+    winningPattern.length &&
+    board[winningPattern[0][0]][winningPattern[0][1]];
   const isDraw =
     board?.[0]?.length === boardSize &&
     !winner &&
