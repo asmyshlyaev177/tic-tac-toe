@@ -11,4 +11,8 @@ export default defineConfig({
     setupFiles: "./setupTests.ts",
     css: true,
   },
+  build: {
+    outDir: 'dist'
+  },
+  base: 'tic-tac-toe'
 });
